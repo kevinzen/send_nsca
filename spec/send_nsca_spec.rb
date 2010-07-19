@@ -53,7 +53,7 @@ describe "SendNsca" do
       :port => 5667,
       :hostname => "kbedell",
       :service => "passive-checkin-test01" ,
-      :return_code => 0,
+      :return_code => SendNsca::STATUS_OK,
       :status => "TEST" 
     }
     nsca_connection = SendNsca::NscaConnection.new(args)
