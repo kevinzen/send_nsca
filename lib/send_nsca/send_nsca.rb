@@ -55,6 +55,7 @@ module SendNsca
       @return_code = args[:return_code]
       @status = args[:status]
       @connected = false
+      @password = args[:password] || ''
 
     end
 
@@ -112,7 +113,7 @@ module SendNsca
 #      puts "string_to_send_with_crc = #{string_to_send_with_crc.length}"
 #      puts "string_to_send_with_crc = #{string_to_send_with_crc.unpack('H*')}"
       
-       encrypted_string_to_send = SendNsca::NscaConnection.xor(@xor_key, string_to_send_with_crc)
+       encrypted_string_to_send = SendNsca::NscaConnection.xor(@xor_key, string_to_send_with_crc, @password)
 #      puts "encrypted_string_to_send = #{encrypted_string_to_send.length}"
 #      puts "encrypted_string_to_send = #{encrypted_string_to_send.unpack('H*')}"
 
@@ -131,19 +132,18 @@ module SendNsca
         r ^ 0xFFFFFFFF
     end
     
-    def self.xor(xor_key, str)
-
-      str_a = str.unpack("C*")
-      key_a = xor_key.unpack("C*")
+    def self.xor(iv, str, password='')
       
+      str_a = str.unpack("C*")
+      iv_a = iv.unpack("C*")
+      password_a = password.unpack("C*")
       result = []
-      key_index = 0
-      str_index = 0
-      str_a.each do |c|
-        result[str_index] = str_a[str_index] ^ key_a[key_index]
-        str_index += 1
-        key_index = key_index == xor_key.length-1 ? 0 : key_index += 1
+
+      str_a.each_with_index do |c, i|
+        result[i] = c ^ iv_a[i % iv_a.size]
+        result[i] ^= password_a[i % password_a.size] unless password_a.empty?
       end
+
       ret_val = result.pack("C*")
     end
 
