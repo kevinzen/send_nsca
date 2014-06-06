@@ -44,6 +44,11 @@ describe "SendNsca" do
     encrypted_str = SendNsca::NscaConnection.xor(xor_key,str)
     deencrypted_str = SendNsca::NscaConnection.xor(xor_key,encrypted_str)
     deencrypted_str.should eql str
+
+    str = "\000\000\000\000\111\222\333\123\321"
+    encrypted_str = SendNsca::NscaConnection.xor(xor_key, str, "YOURPASSWORD")
+    deencrypted_str = SendNsca::NscaConnection.xor(xor_key, encrypted_str, "YOURPASSWORD")
+    deencrypted_str.should eql str
   end
   
   it "should correctly send a message to the server" do 
