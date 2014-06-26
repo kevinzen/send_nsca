@@ -5,13 +5,13 @@
 
 Gem::Specification.new do |s|
   s.name = %q{send_nsca}
-  s.version = "0.4.11"
+  s.version = "0.5.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["kevinzen"]
-  s.date = %q{2010-07-19}
+  s.date = %q{2014-07-26}
   s.description = %q{A pure ruby implementation of the send_nsca program for sending passive alerts to Nagios through NSCA.}
-  s.email = %q{kbedell@backchannelmedia.com}
+  s.email = %q{kbedell@gmail.com}
   s.extra_rdoc_files = [
     "README.rdoc"
   ]
@@ -41,12 +41,12 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      s.add_development_dependency(%q<rspec>, [">= 1.2.9"])
+      s.add_development_dependency(%q<rspec>, [">= 2"])
     else
-      s.add_dependency(%q<rspec>, [">= 1.2.9"])
+      s.add_dependency(%q<rspec>, [">= 2"])
     end
   else
-    s.add_dependency(%q<rspec>, [">= 1.2.9"])
+    s.add_dependency(%q<rspec>, [">= 2"])
   end
 end
 
