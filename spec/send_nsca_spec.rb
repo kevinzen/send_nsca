@@ -40,12 +40,27 @@ describe "SendNsca" do
     deencrypted_str = SendNsca::NscaConnection.xor(xor_key,encrypted_str)
     deencrypted_str.should eql str
     
-    str = "\000\000\000\000\111\222\333\123\321"
+    str = "\000\000\000\000\x1\x2\x3_abc123&*#"
     encrypted_str = SendNsca::NscaConnection.xor(xor_key,str)
     deencrypted_str = SendNsca::NscaConnection.xor(xor_key,encrypted_str)
     deencrypted_str.should eql str
+  end
+  
+  it "should perform valid xor encryption that can be deencrypted and accept a password" do 
+  
+    xor_key = "\377\376\375"
+    str = "Hello!"
+    encrypted_str = SendNsca::NscaConnection.xor(xor_key,str, "YOURPASSWORD")
+    deencrypted_str = SendNsca::NscaConnection.xor(xor_key,encrypted_str, "YOURPASSWORD")
+    deencrypted_str.should eql str
 
-    str = "\000\000\000\000\111\222\333\123\321"
+    xor_key = "adsfkahudsflihasdflkahdsfoaiudfh-3284rqiuy8rtq49087ty  2-\123\666\001\004\377"
+    str = "Hey There This is awesome!!!\000!"
+    encrypted_str = SendNsca::NscaConnection.xor(xor_key,str, "YOURPASSWORD")
+    deencrypted_str = SendNsca::NscaConnection.xor(xor_key,encrypted_str, "YOURPASSWORD")
+    deencrypted_str.should eql str
+    
+    str = "\000\000\000\000\x1\x2\x3_abc123&*#"
     encrypted_str = SendNsca::NscaConnection.xor(xor_key, str, "YOURPASSWORD")
     deencrypted_str = SendNsca::NscaConnection.xor(xor_key, encrypted_str, "YOURPASSWORD")
     deencrypted_str.should eql str

@@ -110,13 +110,13 @@ module SendNsca
       nsca_params = [PACKET_VERSION, @crc, @timestring, @return_code, @hostname, @service, @status ]
       string_to_send_with_crc = nsca_params.pack(PACK_STRING)
       
-#      puts("DEBUG: PACKET_VERSION = #{PACKET_VERSION},\n @crc = #{@crc},\n  @timestring = #{@timestring},\n  @timestamp_hex = #{Time.at(timestamp_hex)},\n  @return_code #{@return_code},\n  @hostname = #{@hostname},\n  @service = #{@service},\n  @status = #{@status}\n")
-#      puts "string_to_send_with_crc = #{string_to_send_with_crc.length}"
-#      puts "string_to_send_with_crc = #{string_to_send_with_crc.unpack('H*')}"
+      #puts("DEBUG: PACKET_VERSION = #{PACKET_VERSION},\n @crc = #{@crc},\n  @timestring = #{@timestring},\n  @timestamp_hex = #{Time.at(timestamp_hex)},\n  @return_code #{@return_code},\n  @hostname = #{@hostname},\n  @service = #{@service},\n  @status = #{@status}\n")
+      #puts "string_to_send_with_crc = #{string_to_send_with_crc.length}"
+      #puts "string_to_send_with_crc = #{string_to_send_with_crc.unpack('H*')}"
       
-       encrypted_string_to_send = SendNsca::NscaConnection.xor(@xor_key, string_to_send_with_crc, @password)
-#      puts "encrypted_string_to_send = #{encrypted_string_to_send.length}"
-#      puts "encrypted_string_to_send = #{encrypted_string_to_send.unpack('H*')}"
+      encrypted_string_to_send = SendNsca::NscaConnection.xor(@xor_key, string_to_send_with_crc, @password)
+      #puts "encrypted_string_to_send = #{encrypted_string_to_send.length}"
+      #puts "encrypted_string_to_send = #{encrypted_string_to_send.unpack('H*')}"
 
       @tcp_client.send(encrypted_string_to_send, 0)
       @tcp_client.close
