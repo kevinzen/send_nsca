@@ -10,6 +10,7 @@ module SendNsca
     
     # todo: replace timeout with a better method of handling communication timeouts.
     require 'timeout'
+    attr_accessor :nscatimeout
     
     # params for connecting to the nsca/nagios server
     attr_accessor  :nscahost
@@ -56,12 +57,13 @@ module SendNsca
       @status = args[:status]
       @connected = false
       @password = args[:password] || ''
+      @timeout = args[:nscatimeout] || 1
 
     end
 
     def connect_and_get_keys
       begin
-        timeout(1) do #the server has one second to answer
+        timeout(@timeout) do # the server has @timeout second(s) to answer
           @tcp_client = TCPSocket.open(@nscahost, @port)
           @connected = true
           @xor_key_and_timestamp = @tcp_client.recv(132)
