@@ -28,6 +28,7 @@ Gem::Specification.new do |s|
     "spec/spec_helper.rb"
   ]
   s.homepage = "http://github.com/kevinzen/send_nsca"
+  s.licenses = ["MIT"]
   s.rubygems_version = "2.4.5"
   s.summary = "A ruby gem for sending passive alerts to Nagios through NSCA."
   s.test_files = ["spec/send_nsca_spec.rb", "spec/spec_helper.rb", "spec/spec.opts"]
@@ -38,18 +39,15 @@ Gem::Specification.new do |s|
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<jeweler>, [">= 0"])
       s.add_runtime_dependency(%q<send_nsca>, [">= 0"])
-      s.add_development_dependency(%q<rspec>, ["~> 2"])
       s.add_development_dependency(%q<rspec>, [">= 1.2.9"])
     else
       s.add_dependency(%q<jeweler>, [">= 0"])
       s.add_dependency(%q<send_nsca>, [">= 0"])
-      s.add_dependency(%q<rspec>, ["~> 2"])
       s.add_dependency(%q<rspec>, [">= 1.2.9"])
     end
   else
     s.add_dependency(%q<jeweler>, [">= 0"])
     s.add_dependency(%q<send_nsca>, [">= 0"])
-    s.add_dependency(%q<rspec>, ["~> 2"])
     s.add_dependency(%q<rspec>, [">= 1.2.9"])
   end
 end

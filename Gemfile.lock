@@ -2,6 +2,8 @@ PATH
   remote: .
   specs:
     send_nsca (0.6.0)
+      jeweler
+      send_nsca
 
 GEM
   remote: https://rubygems.org/
@@ -70,5 +72,5 @@ PLATFORMS
 
 DEPENDENCIES
   jeweler
-  rspec (~> 2)
+  rspec (>= 1.2.9)
   send_nsca!

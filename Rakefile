@@ -10,11 +10,11 @@ begin
     gem.email = 'kbedell@gmail.com'
     gem.homepage = 'http://github.com/kevinzen/send_nsca'
     gem.authors = ['kevinzen', 'kyrremann']
-    gem.add_development_dependency 'rspec', '>= 1.2.9'
     gem.require_path = 'lib'
     gem.files        = %w(History.txt install.rb MIT-LICENSE.txt README.rdoc Rakefile) + Dir['lib/**/*'] + Dir['spec/**/*']
     gem.test_files   = Dir['spec/**/*']
-    # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
+    gem.licenses     = ['MIT']
+    # gem is a Gem::Specification... see http://docs.seattlerb.org/rubygems/Gem/Specification.html for additional settings
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
