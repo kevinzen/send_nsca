@@ -80,8 +80,8 @@ module SendNsca
       rescue
         @connected = false
         @error = "send_ncsa - error connecting to nsca/nagios: #{$!}"
-        puts  @error
-        @tcp_client.try(:close)
+        puts @error
+        @tcp_client.try(:close) unless @tcp_client.nil?
         raise # re-raise same exception
       end
       timestamp_for_logging
