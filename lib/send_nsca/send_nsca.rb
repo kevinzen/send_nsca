@@ -3,6 +3,7 @@ module SendNsca
   STATUS_OK = 0 
   STATUS_WARNING = 1
   STATUS_CRITICAL = 2
+  STATUS_UNKNOWN = 3
 
   NONE = 0
   XOR = 1
@@ -25,12 +26,12 @@ module SendNsca
     attr_reader   :error
     
     # read from the nsca/nagios server
-    attr_accessor  :xor_key_and_timestamp
+    attr_accessor  :iv_and_timestamp
 
-    # converted from :xor_key_and_timestamp
-    attr_accessor  :xor_key_and_timestamp_str
-    attr_accessor  :xor_key_string
-    attr_accessor  :xor_key
+    # converted from :iv_and_timestamp
+    attr_accessor  :iv_and_timestamp_str
+    attr_accessor  :iv_string
+    attr_accessor  :iv
     attr_accessor  :timestring    
     attr_accessor  :timestamp_hex
     attr_accessor  :timestamp
@@ -52,6 +53,7 @@ module SendNsca
     # for sending to nsca
     attr_accessor  :crc
     PACKET_VERSION = 3
+    INITIAL_PACKET_LEN = 132
     PACK_STRING = "nxx N a4 n a64 a128 a512xx"
 
     def initialize(args)
@@ -69,12 +71,12 @@ module SendNsca
       @debug = args[:debug] || false
     end
 
-    def connect_and_get_keys
+    def connect_and_get_iv
       begin
         timeout(@timeout) do # the server has @timeout second(s) to answer
           @tcp_client = TCPSocket.open(@nscahost, @port)
           @connected = true
-          @xor_key_and_timestamp = @tcp_client.recv(132)
+          @iv_and_timestamp = @tcp_client.recv(INITIAL_PACKET_LEN)
         end
       rescue
         @connected = false
@@ -88,26 +90,26 @@ module SendNsca
     
     def convert_timestamp
       # convert timestamp for use in comm to nagios
-      @timestring = @xor_key_and_timestamp[@xor_key_and_timestamp.length-4,@xor_key_and_timestamp.length]
+      @timestring = @iv_and_timestamp[@iv_and_timestamp.length-4,@iv_and_timestamp.length]
     end
 
     def timestamp_for_logging
       # convert timestamp in a format we can log
-      @xor_key_and_timestamp_str = @xor_key_and_timestamp.unpack("H*")
-      @timestring_for_log = @xor_key_and_timestamp_str[0][256,8]
+      @iv_and_timestamp_str = @iv_and_timestamp.unpack("H*")
+      @timestring_for_log = @iv_and_timestamp_str[0][256,8]
       @timestamp_hex = @timestring_for_log.hex
       @timestamp = Time.at(@timestamp_hex)
     end
 
-    def convert_xor_key
+    def convert_iv
       # strip off the last 4 characters which are the timestamp
-      @xor_key = @xor_key_and_timestamp[0,@xor_key_and_timestamp.length-4]
+      @iv = @iv_and_timestamp[0,@iv_and_timestamp.length-4]
     end
 
     def intialize_nsca_connection
-      connect_and_get_keys
+      connect_and_get_iv
       convert_timestamp
-      convert_xor_key
+      convert_iv
     end
   
     def send_nsca
@@ -136,7 +138,7 @@ module SendNsca
       if @encryption_mode == SendNsca::NONE
         string_to_send = string_to_send_with_crc
       else
-        string_to_send = SendNsca::NscaConnection.xor(@xor_key, string_to_send_with_crc, @password)
+        string_to_send = SendNsca::NscaConnection.xor(@iv, string_to_send_with_crc, @password)
         if @debug
           puts "encrypted_string_to_send = #{string_to_send.length}"
           puts "encrypted_string_to_send = #{string_to_send.unpack('H*')}"
