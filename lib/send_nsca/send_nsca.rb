@@ -72,7 +72,7 @@ module SendNsca
 
     def connect_and_get_keys
       begin
-        timeout(@timeout) do # the server has @timeout second(s) to answer
+        Timeout.timeout(@timeout) do # the server has @timeout second(s) to answer
           @tcp_client = TCPSocket.open(@nscahost, @port)
           @connected = true
           @xor_key_and_timestamp = @tcp_client.recv(132)
